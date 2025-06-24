@@ -62,14 +62,15 @@ dict_ = (
 # Typed arrays: e.g. Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3, 4, 5)])
 # Need to support, e.g.:
 # polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3), PackedInt32Array(3, 2, 4, 5)])
+inner_type = obj_type | Word(alphanums + "_")
 typed_array = (
-    Literal("Array").suppress() +
-    Suppress("[") +
-    Word(alphanums + "_").set_results_name("inner_type") +
-    Suppress("]") +
-    Suppress("(") +
-    list_.set_results_name("inner_value") +
-    Suppress(")")
+    Literal("Array").suppress()
+    + Suppress("[")
+    + inner_type.set_results_name("inner_type")
+    + Suppress("]")
+    + Suppress("(")
+    + list_.set_results_name("inner_value")
+    + Suppress(")")
 ).set_name("typed_array").set_parse_action(GDTypedArray.from_parser)
 
 # Exports
